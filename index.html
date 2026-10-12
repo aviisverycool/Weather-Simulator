@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="wrap">
+        <canvas id="c"></canvas>
+    </div>
+    
+    <div id="toolbar">
+        <button data-mat="1" class="active">Dirt</button>
+        <button data-mat="2">Stone</button>
+        <button data-mat="3">Grass</button>
+        <button data-mat="4">Wood</button>
+        <button data-mat="5">Leaves</button>
+
+        <div class="sep"></div>
+
+        <button data-tool="tree" class="tool">Tree</button>
+        <button data-tool="erase" class="tool">Erase</button>
+
+        <div class="sep"></div>
+
+        <label>Size
+            <input id="size" type="range" min="1" max="12" value="3"/>
+            <span id="sizeval">3</span>
+        </label>
+
+        <div class="sep"></div>
+
+        <button id="clear">Clear</button>
+        <button id="Pause">Pause</button>
+    </div>
+
+    <div class="hint">
+        Click to draw, <b>Size</b> controls brush and tree size, dirt and grass falls down, stone and wood stay hanging.
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
