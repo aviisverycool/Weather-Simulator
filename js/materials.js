@@ -8,7 +8,7 @@ export const WATER = 6;
 
 const rgb = (r, g, b) => (0xff << 24) | (b << 16) | (g << 8) | r;
 
-export const COLORS = new Uint32Array(6);
+export const COLORS = new Uint32Array(7);
 COLORS[AIR] = rgb(0, 0, 0);
 COLORS[DIRT] = rgb(70, 37, 17);
 COLORS[STONE] = rgb(110, 110, 120);
@@ -25,9 +25,9 @@ export function line(x0, y0, x1, y1, cb) {
     let err = dx + dy;
     for (;;) {
         cb(x0, y0);
-        if (x0 === x1 && y0 == y1) break;
+        if (x0 === x1 && y0 === y1) break;
         const e2 = 2 * err;
         if (e2 >= dy) {err += dy; x0 += sx}
-        if (e2 <= dy) {err += dy; x0 += sx}
+        if (e2 <= dx) {err += dx; y0 += sy}
     }
 }

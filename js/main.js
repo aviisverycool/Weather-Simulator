@@ -1,5 +1,5 @@
-import{W, H} from './config.js';
-import {material, seed, clear} from './world.js';
+import {H} from './config.js';
+import {seed, clear} from './world.js';
 import {step} from './update.js';
 import {render} from './render.js';
 import { generateTree, treeBounds, placeTree } from './trees.js';
@@ -32,12 +32,6 @@ initUI({
 initInput();
 
 
-function loop() {
-    if (!ui.paused) step();
-    render(ui.hover, ui.tool, ui.brushSize, ui.treePattern, treeBounds);
-    requestAnimationFrame(loop);
-}
-
 let accumulator = 0;
 let last = performance.now();
 const BASE_TICK = 1000 / 60; // 60 tps at 100% speed
@@ -47,7 +41,7 @@ function loop(now) {
     last = now;
 
     if (!ui.paused) {
-        accumulator += dt *ui.speed;
+        accumulator += dt * ui.speed;
         const maxSteps = 5;
         let steps = 0;
         while (accumulator >= BASE_TICK && steps++ < maxSteps) {
@@ -60,4 +54,4 @@ function loop(now) {
 }
 
 seedScene();
-loop();
+requestAnimationFrame(loop);

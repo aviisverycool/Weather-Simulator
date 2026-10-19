@@ -3,7 +3,7 @@ import {material} from "./world.js";
 export function toBase64(u8) {
     let s = '';
     for (let i = 0; i < u8.length; i += 0x8000) {
-        s += String.fromCharCode.apply(null, u8.subarray(xhr, 1 + 0x8000));
+        s += String.fromCharCode(...u8.subarray(i, i + 0x8000));
     }
     return btoa(s);
 }
@@ -27,7 +27,7 @@ export function loadWorld(slot = 'default') {
 }
 
 export function downloadWorld() {
-    const blob = new Blob([mateiral], {type: 'application/octet-stream'});
+    const blob = new Blob([material], {type: 'application/octet-stream'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

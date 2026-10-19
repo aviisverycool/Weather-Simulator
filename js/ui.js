@@ -5,6 +5,7 @@ export const ui = {
     selectedMat: DIRT,
     tool: 'brush',
     brushSize: 3,
+    speed: 1,
     paused: false,
     hover: null,
     treePattern: generateTree(3),

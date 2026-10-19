@@ -1,11 +1,12 @@
 import {W, H} from './config.js';
-import {AIR} from './materials.js';
+import {AIR, line} from './materials.js';
 import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';
 
 const canvas = document.getElementById('c');
 let drawing = false;
+let lastPos = null;
 
 function eventToGrid(e) {
     const rect = canvas.getBoundingClientRect();
@@ -32,6 +33,7 @@ export function initInput() {
     canvas.addEventListener('pointerdown', (e) => {
         drawing = true;
         const {x, y} = eventToGrid(e);
+        lastPos = {x, y};
         ui.hover = {x, y};
         applyAt(x, y);
         try { canvas.setPointerCapture(e.pointerId); } catch {}
@@ -41,35 +43,22 @@ export function initInput() {
         const {x, y} = eventToGrid(e);
         ui.hover = {x, y};
         if (!drawing || ui.tool === 'tree') return;
-        applyAt(x, y);
+        line(lastPos.x, lastPos.y, x, y, applyAt);
+        lastPos = {x, y};
     });
 
     canvas.addEventListener('pointerleave', () => {
         ui.hover = null;
-        drawing = false;
     });
 
     canvas.addEventListener('pointerup', (e) => {
         drawing = false;
+        lastPos = null;
         try { canvas.releasePointerCapture(e.pointerId); } catch {}
     });
 
     canvas.addEventListener('pointercancel', () => {
         drawing = false;
+        lastPos = null;
     });
-}
-
-let lastPos = null;
-
-lastPos = {x, y};
-applyAt(x, y);
-
-const {x, y} = eventToGrid(e);
-if (drawing && lastPos && ui.tool !== 'tree') {
-    line(lastPos.x, lastPos.y, x, y, (gx, gy) => applyAt(gx, gy));
-    lastPos = {x, y};
-}
-else if (drawing && ui.tool !== 'tree') {
-    applyAt(x, y);
-    lastPos = {x, y};
 }
