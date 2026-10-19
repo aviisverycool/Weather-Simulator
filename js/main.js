@@ -3,7 +3,7 @@ import {material, seed, clear} from './world.js';
 import {step} from './update.js';
 import {render} from './render.js';
 import { generateTree, treeBounds, placeTree } from './trees.js';
-import {ui, initUI} from '.ui.js';
+import {ui, initUI} from './ui.js';
 import { initInput } from './input.js';
 
 function seedScene() {
