@@ -1,0 +1,115 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000000;
+    color: #ddd;
+    font-family: system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wrap {
+    position: relative;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 /16));
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    background: #000000;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+#toolbar {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0 ,0.9);
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 13px;
+    backdrop-filter: blur(6px);
+    flex-wrap: wrap;
+    max-width: 95 vw;
+    z-index: 10;
+}
+
+#toolbar button {
+    background: #1e1e2a;
+    color: #ddd;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: backgrund 0.1s;
+}
+
+#toolbar button:hover {
+    background: #2a2a3a;
+}
+
+#toolbar button.active {
+    background: #3a5fa0;
+    border-color: #6a8fd0;
+    color: #fff;
+}
+
+#toolbar button.active hover {
+    background: #3a5fa0;
+}
+
+#toolbar label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#toolbar input[type=range] {
+    width: 100px;
+    vertical-align: middle;
+}
+
+#sizeVal {
+    display: inline-block;
+    width: 1.5em;
+}
+
+.sep {
+    width: 1px;
+    height: 20px;
+    background: #333;
+    margin: 0 4px;
+}
+
+.hint {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #888;
+    background: rgba(20, 20, 30, 0.75);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #2a2a3a;
+    z-index: 10;
+    text-align: center;
+    max-width: 90vw;
+}
