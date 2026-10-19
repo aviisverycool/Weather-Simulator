@@ -58,3 +58,18 @@ export function initInput() {
         drawing = false;
     });
 }
+
+let lastPos = null;
+
+lastPos = {x, y};
+applyAt(x, y);
+
+const {x, y} = eventToGrid(e);
+if (drawing && lastPos && ui.tool !== 'tree') {
+    line(lastPos.x, lastPos.y, x, y, (gx, gy) => applyAt(gx, gy));
+    lastPos = {x, y};
+}
+else if (drawing && ui.tool !== 'tree') {
+    applyAt(x, y);
+    lastPos = {x, y};
+}

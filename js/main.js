@@ -38,5 +38,26 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
+let accumulator = 0;
+let last = performance.now();
+const BASE_TICK = 1000 / 60; // 60 tps at 100% speed
+
+function loop(now) {
+    const dt = Math.min(now - last, 100);
+    last = now;
+
+    if (!ui.paused) {
+        accumulator += dt *ui.speed;
+        const maxSteps = 5;
+        let steps = 0;
+        while (accumulator >= BASE_TICK && steps++ < maxSteps) {
+            step();
+            accumulator -= BASE_TICK;
+        }
+    }
+    render(ui.hover, ui.tool, ui.brushSize, ui.treePattern, treeBounds);
+    requestAnimationFrame(loop);
+}
+
 seedScene();
 loop();
