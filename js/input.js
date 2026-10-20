@@ -1,5 +1,5 @@
 import {W, H} from './config.js';
-import {AIR, line} from './materials.js';
+import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, line} from './materials.js';
 import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';
@@ -30,6 +30,8 @@ function applyAt(x, y) {
 }
 
 export function initInput() {
+    document.addEventListener('keydown', handleKey);
+
     canvas.addEventListener('pointerdown', (e) => {
         drawing = true;
         const {x, y} = eventToGrid(e);
@@ -61,4 +63,45 @@ export function initInput() {
         drawing = false;
         lastPos = null;
     });
+}
+
+function handleKey(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER};
+    if (matMap[e.key] !== undefined) {
+        document.querySelector(`[data-mat="${matMap[e.key]}"]`)?.click();
+        return;
+    }
+
+    switch (e.key) {
+        case 'e': case 'E':
+            document.querySelector('[data-tool="eraser"]')?.click();
+            break;
+        case ' ':
+            e.preventDefault();
+            document.getElementById('pause')?.click();
+            break;
+        case '[':
+            adjustBrushSize(-1);
+            break;
+        case ']':
+            adjustBrushSize(1);
+            break;
+    }
+}
+
+function adjustBrushSize(delta) {
+    const slider = document.getElementById('size');
+    if (!slider) return;
+
+    const next = Math.max(
+        parseInt(slider.min, 10),
+        Math.min(parseInt(slider.max, 10), ui.brushSize + delta)
+    );
+    if (next === ui.brushSize) return;
+    slider.value = next;
+    slider.dispatchEvent(new Event('input'));
 }

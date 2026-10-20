@@ -1,5 +1,6 @@
 import {DIRT} from './materials.js';
 import {generateTree} from './trees.js';
+import {saveWorld, loadWorld, undo} from './save.js'
 
 export const ui = {
     selectedMat: DIRT,
@@ -63,4 +64,8 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
         sizeInput.addEventListener('input', (e) => updateSize(e.target.value));
         updateSize(sizeInput.value);
     }
+
+    document.getElementById('save')?.addEventListener('click', () => saveWorld());
+    document.getElementById('save')?.addEventListener('click', () => loadWorld());
+    document.getElementById('save')?.addEventListener('click', () => undo());
 }
