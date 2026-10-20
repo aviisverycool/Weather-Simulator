@@ -2,32 +2,41 @@ import {W, H, idx} from './config.js';
 import {AIR, DIRT, GRASS, WATER} from './materials.js';
 import {material} from './world.js';
 
+const moved = new Uint8Array(W* H)
+
+function swap(a, b) {
+    material[b] = material[a]
+    material[a] = AIR;
+    moved[b] = 1;
+}
+
 function tryFall(x, y) {
     const i = idx(x, y);
     const m = material[i];
 
-    const below = i + W;
-    if (y + 1 < H && material[below] === AIR) {
-        material[below] = m;
-        material[i] = AIR;
-        return;
+    if (y + 1 >= H) return;
+
+    const below = idx(x, y + 1);
+    if (material[below] === AIR) {
+        swap(i, below);
+        return; 
     }
 
     const dir = Math.random() < 0.5 ? -1 : 1;
     const nx = x + dir;
-    if (nx < 0 || nx >= W || y + 1 >= H) return;
+    if (nx < 0 || nx >= W) return;
+
     const diag = idx(nx, y + 1);
     if (material[diag] === AIR) {
-        material[diag] = m;
-        material[i] = AIR;
+        swap(i, swap);
     }
 }
 
 function stepWater(x, y) {
     const i = idx(x, y);
 
-    if (y + 1 < H && material[i + W] === AIR) {
-        material[i + W] = WATER;
+    if (y + 1 < H && material[idx(x, y + 1)] === AIR) {
+        material[idx(x, y + 1)] = WATER;
         material[i] = AIR;
         return;
     }
@@ -36,17 +45,18 @@ function stepWater(x, y) {
     for (const dx of order) {
         const nx = x + dx;
         if (nx < 0 || nx >= W) continue;
-        const j = idx(nx, y);
-        if (material[j] === AIR) {
-            material[j] = WATER;
+
+        const target = idx(nx, y);
+        if (material[target] === AIR) {
+            material[target] = WATER;
             material[i] = AIR;
             return;
         }
 
         if (y + 1 < H) {
-            const dj = idx(nx, y + 1);
-            if (material[dj] === AIR) {
-                material[dj] = WATER;
+            const diag = idx(nx, y + 1);
+            if (material[diag] === AIR) {
+                material[diag] = WATER;
                 material[i] = AIR;
                 return;
             }
