@@ -1,15 +1,17 @@
-import{get, set} from './world.js'
-import{W, H} from './config.js'
+import {set} from './world.js';
+import {W, H} from './config.js';
+import {pushHistory} from './save.js';
 
 export function brush(cx, cy, mat, size) {
     const r = size;
-    const r2 = r * r
+    const r2 = r * r;
+    pushHistory();
     for (let dy = -r; dy <= r; dy++) {
         for (let dx = -r; dx <= r; dx++) {
-            if (dx * dx + dy * dy >r2) continue;
+            if (dx * dx + dy * dy > r2) continue;
             const x = cx + dx;
             const y = cy + dy;
-            if (x <0 || x >= W || y < 0 || y >= H) continue;
+            if (x < 0 || x >= W || y < 0 || y >= H) continue;
             set(x, y, mat);
         }
     }

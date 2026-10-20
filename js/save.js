@@ -44,8 +44,7 @@ export function pushHistory() {
 }
 
 export function undo() {
-    if (history.length < 2) return false;
-    history.pop();
-    material.set(history[history.length - 1]);
+    if (history.length === 0) return false;
+    material.set(history.pop());
     return true;
 }

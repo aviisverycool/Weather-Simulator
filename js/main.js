@@ -5,6 +5,7 @@ import {render} from './render.js';
 import { generateTree, treeBounds, placeTree } from './trees.js';
 import {ui, initUI} from './ui.js';
 import { initInput } from './input.js';
+import {pushHistory} from './save.js';
 
 function seedScene() {
     seed();
@@ -19,7 +20,10 @@ function seedScene() {
 
 
 initUI({
-    onClear: () => clear(),
+    onClear: () => {
+        pushHistory();
+        clear();
+    },
     onPauseToggle: () => {
         ui.paused = !ui.paused;
         return ui.paused;

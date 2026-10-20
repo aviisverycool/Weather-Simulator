@@ -1,6 +1,6 @@
 import {DIRT} from './materials.js';
 import {generateTree} from './trees.js';
-import {saveWorld, loadWorld, undo} from './save.js'
+import {saveWorld, loadWorld, undo} from './save.js';
 
 export const ui = {
     selectedMat: DIRT,
@@ -16,9 +16,12 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
     const matButtons = document.querySelectorAll('[data-mat]');
     const toolButtons = document.querySelectorAll('[data-tool]');
     const clearBtn = document.getElementById('clear');
-    const pauseBtn = document.getElementById('Pause') || document.getElementById('pause');
+    const pauseBtn = document.getElementById('pause');
     const sizeInput = document.getElementById('size');
     const sizeValue = document.getElementById('sizeval');
+    const saveBtn = document.getElementById('save');
+    const loadBtn = document.getElementById('load');
+    const undoBtn = document.getElementById('undo');
 
     matButtons.forEach((b) => {
         b.addEventListener('click', () => {
@@ -65,7 +68,13 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
         updateSize(sizeInput.value);
     }
 
-    document.getElementById('save')?.addEventListener('click', () => saveWorld());
-    document.getElementById('save')?.addEventListener('click', () => loadWorld());
-    document.getElementById('save')?.addEventListener('click', () => undo());
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => saveWorld());
+    }
+    if (loadBtn) {
+        loadBtn.addEventListener('click', () => loadWorld());
+    }
+    if (undoBtn) {
+        undoBtn.addEventListener('click', () => undo());
+    }
 }

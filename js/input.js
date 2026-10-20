@@ -82,7 +82,7 @@ function handleKey(e) {
             break;
         case ' ':
             e.preventDefault();
-            document.getElementById('pause')?.click();
+            (document.getElementById('pause') || document.getElementById('Pause'))?.click();
             break;
         case '[':
             adjustBrushSize(-1);
