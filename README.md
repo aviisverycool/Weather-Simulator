@@ -1,5 +1,6 @@
 # Weather-Simulator: [https://weather-simulator-sepia.vercel.app/](url)
 A sandbox where you can see how weather affects the surrounding environment and what combinations create what weather.
+to play this simulator, just click on the link.
 
 right now, i have the sandbox implemented, but in the future, i will refine the sandbox and add silders to control elements of the weather
 
