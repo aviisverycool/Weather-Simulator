@@ -50,7 +50,7 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
         pauseBtn.addEventListener('click', () => {
             const paused = onPauseToggle ? onPauseToggle() : ui.paused;
             ui.paused = paused;
-            pauseBtn.textContent = paused ? '▶ Play' : '⏸ Pause';
+            pauseBtn.textContent = paused ? '▶Play' : '⏸Pause';
         });
     }
 

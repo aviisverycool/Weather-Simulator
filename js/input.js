@@ -31,6 +31,7 @@ function applyAt(x, y) {
 }
 
 export function initInput() {
+    let paintTimer = null;
     document.addEventListener('keydown', handleKey);
 
     canvas.addEventListener('pointerdown', (e) => {
@@ -41,6 +42,14 @@ export function initInput() {
         pushHistory();
         applyAt(x, y);
         try { canvas.setPointerCapture(e.pointerId); } catch {}
+        if (ui.tool !== 'tree') {
+            if (paintTimer) clearInterval(paintTimer);
+            paintTimer = setInterval(() => {
+                if (drawing && lastPos) {
+                    applyAt(lastPos.x, lastPos.y);
+                }
+            }, 50);
+        }
     });
 
     canvas.addEventListener('pointermove', (e) => {
@@ -58,12 +67,14 @@ export function initInput() {
     canvas.addEventListener('pointerup', (e) => {
         drawing = false;
         lastPos = null;
+        if (paintTimer) clearInterval(paintTimer);
         try { canvas.releasePointerCapture(e.pointerId); } catch {}
     });
 
     canvas.addEventListener('pointercancel', () => {
         drawing = false;
         lastPos = null;
+        if (paintTimer) clearInterval(paintTimer);
     });
 }
 
