@@ -1,7 +1,6 @@
 import {LEAF, WOOD} from './materials.js';
 import {set} from './world.js';
 import {W} from './config.js';
-import {pushHistory} from './save.js';
 
 export function generateTree(size) {
     const t = (size - 1) / 11;
@@ -44,7 +43,6 @@ export function treeBounds(pattern, cx, cy) {
 }
 
 export function placeTree(pattern, cx, cy) {
-    pushHistory();
     const {px, py} = treeBounds(pattern, cx, cy);
     for (let ty = 0; ty < pattern.length; ty++) {
         for (let tx = 0; tx < pattern[ty].length; tx++) {

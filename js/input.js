@@ -3,6 +3,7 @@ import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, line} from './materials.js';
 import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';
+import {pushHistory} from './save.js';
 
 const canvas = document.getElementById('c');
 let drawing = false;
@@ -37,6 +38,7 @@ export function initInput() {
         const {x, y} = eventToGrid(e);
         lastPos = {x, y};
         ui.hover = {x, y};
+        pushHistory();
         applyAt(x, y);
         try { canvas.setPointerCapture(e.pointerId); } catch {}
     });

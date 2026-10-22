@@ -1,11 +1,9 @@
 import {set} from './world.js';
 import {W, H} from './config.js';
-import {pushHistory} from './save.js';
 
 export function brush(cx, cy, mat, size) {
     const r = size;
     const r2 = r * r;
-    pushHistory();
     for (let dy = -r; dy <= r; dy++) {
         for (let dx = -r; dx <= r; dx++) {
             if (dx * dx + dy * dy > r2) continue;
