@@ -18,17 +18,18 @@ body {
     flex: 1;
     min-height: 0;
     display:flex;
-    align-items:center;
+    align-items:flex-end;
     justify-content: center;
     overflow: hidden;
     background: #000000;
     position: relative;
     width: 100%;
+    container-type: size;
 }
 
 canvas {
-    width: 100%;
-    height: 100%;
+    width: min(100cqw, calc(100cqh * 16 / 9));
+    height: auto;
     display: block;
     image-rendering: pixelated;
     cursor: crosshair;
