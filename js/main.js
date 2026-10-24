@@ -1,4 +1,4 @@
-import {H} from './config.js';
+import {H, W} from './config.js';
 import {seed, clear, get} from './world.js';
 import {step} from './update.js';
 import {render} from './render.js';
@@ -8,33 +8,52 @@ import { initInput } from './input.js';
 import {pushHistory} from './save.js';
 import {GRASS} from './materials.js';
 
+const placedTrees = [];
+
 function seedScene() {
     seed();
-    
-    const sizes = [2, 4, 6, 8, 10];
-    const xs = [40, 100, 160, 220, 280];
+    placedTrees.length = 0;
 
-    for (let i = 0; i < sizes.length; i++) {
-        const x = xs[i];
+    const numTrees = Math.floor(Math.random() * 25);
+    let attempts = 0;
+
+    while (placedTrees.length < numTrees && attempts < 100) {
+        attempts++;
+
+        const x = Math.floor(Math.random() * (W - 20)) + 10;
+
+        let tooClose = false;
+        for (const otherX of placedTrees) {
+
+            if (Math.abs(x - otherX) < 8) {
+                tooClose = true;
+                break;
+            }
+        }
+
+        if (tooClose) continue;
 
         let groundY = -1;
-        for (let y = 0; y < H; y++) {
+        for (let y = 0; y<H; y++) {
             if (get(x, y) === GRASS) {
-                groundY = y;
+                groundY=y;
                 break;
             }
         }
 
         if (groundY >= 0) {
-            placeTree(generateTree(sizes[i]), x, groundY - 1);
+            const randomSize = Math.floor(Math.random() * 9)+2;
+            placeTree(generateTree(randomSize), x, groundY - 1);
+            placedTrees.push(x);
         }
     }
 }
 
 initUI({
-    onClear: () => {
+    onClear: () => {           
         pushHistory();
         clear();
+        seedScene();
     },
     onPauseToggle: () => {
         ui.paused = !ui.paused;

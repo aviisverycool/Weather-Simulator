@@ -5,11 +5,14 @@ import {idx} from './config.js';
 export const material = new Uint8Array(W*H);
 
 // prep for procedural generation
-const offset1 = Math.random() * 100; 
-const offset2 = Math.random() * 100;
-const offset3 = Math.random() * 100;
+
 
 export function seed() {
+
+    const offset1 = Math.random() * 100; 
+    const offset2 = Math.random() * 100;
+    const offset3 = Math.random() * 100;
+
     const baseY = Math.floor(H*0.75);
 
     for (let x =0; x < W; x++) {
@@ -25,8 +28,8 @@ export function seed() {
 
         for (let y =groundY; y<H; y++) {
             let m = STONE;
-            if (y === groundY) m = GRASS;
-            else if (y < groundY + 4) m = DIRT;
+            if (y === groundY+(Math.floor(Math.random()))) m = GRASS;
+            else if (y < groundY + (Math.floor(Math.random()*8))+4) m = DIRT;
             material[idx(x, y)] = m;
         }
     }
