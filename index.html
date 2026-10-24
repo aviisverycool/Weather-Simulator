@@ -11,34 +11,40 @@
         <canvas id="c"></canvas>
     </div>
     
-    <div id="toolbar">
-        <button data-mat="1" class="active">Dirt</button>
-        <button data-mat="2">Stone</button>
-        <button data-mat="3">Grass</button>
-        <button data-mat="4">Wood</button>
-        <button data-mat="5">Leaves</button>
-        <button data-mat="6">Water</button>
+<div id="bottom-bar">
+    <div id="left-panel">
+        <div id="elements-ui" class=ui-group>
+            <button data-mat="1" class="active">Dirt</button>
+            <button data-mat="2">Stone</button>
+            <button data-mat="3">Grass</button> 
+            <button data-mat="4">Wood</button> 
+            <button data-mat="5">Leaves</button>
+            <button data-mat="6">Water</button> 
+            <div class="sep"></div>
+            <button data-tool="tree" class="tool">Tree</button>
+            <button data-tool="erase" class="tool">Erase</button>
+        </div>
 
-        <div class="sep"></div>
-
-        <button data-tool="tree" class="tool">Tree</button>
-        <button data-tool="erase" class="tool">Erase</button>
-
-        <div class="sep"></div>
-
-        <label>Size
-            <input id="size" type="range" min="1" max="12" value="3"/>
-            <span id="sizeval">3</span>
-        </label>
-
-        <div class="sep"></div>
-        <button id="clear">Clear</button>
-        <button id="pause">⏸Pause</button>
-        <button id="save">Save</button>
-        <button id="load">Load</button>
-        <button id="undo">Undo</button>
+        <div id="weather-ui" class="ui-group" style="display: none;">
+            <label class="w-label">Temperature<input type="range" id="wTemp" min="-20" max="40" value="20" step="1" /><span id="wTempVal"></span></label>
+            <label class="w-label">Humidity<input type="range" id="wHumid" min="0" max="100" value="50" step="1" /> <span id="wHumidVal"></span></label>
+            <label class="w-label">Pressure<input type="range" id="wPress" min="950" max="1050" value="1010" step="1" /><span id="wPressVal"></span></label>
+            <label class="w-label">Wind Speed<input type="range" id="wWindS" min="0" max="100" value ="10" step="1" /><span id="wWindSVal"></span></label>
+        </div>
     </div>
 
+    <div id="right-panel">
+        <button id="toggle-panel" style="width: 100%; font-weight: bold; margin-bottom: 4px;">Switch to Weather</button>
+        <label style="justify-content: space-between; width: 100%">Size<input id="size" type="range" min="1" max="12" value="3" style="flex: 1; margin: 0 8px;"><span id="sizeval">3</span></label>
+        <div class="control-buttons">
+            <button id="clear">Clear</button>
+            <button id="pause">Pause</button>
+            <button id="save">Save</button>
+            <button id="load">Load</button>
+            <button id="undo">Undo</button>
+        </div>
+    </div>
+</div>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

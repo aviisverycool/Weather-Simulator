@@ -91,7 +91,7 @@ function handleKey(e) {
 
     switch (e.key) {
         case 'e': case 'E':
-            document.querySelector('[data-tool="eraser"]')?.click();
+            document.querySelector('[data-tool="erase"]')?.click();
             break;
         case ' ':
             e.preventDefault();

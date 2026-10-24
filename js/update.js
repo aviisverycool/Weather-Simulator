@@ -48,11 +48,6 @@ function stepWater(x, y) {
         return;
     }
 
-    if (y + 1 < H && material[idx(x, y + 1)] === AIR) {
-        swap(i, idx(x, y +1));
-        return;
-    }
-
     const order = Math.random() < 0.5 ? [1, -1] : [-1, 1];
 
     for (const dx of order) {
