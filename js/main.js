@@ -1,23 +1,35 @@
 import {H} from './config.js';
-import {seed, clear} from './world.js';
+import {seed, clear, get} from './world.js';
 import {step} from './update.js';
 import {render} from './render.js';
 import { generateTree, treeBounds, placeTree } from './trees.js';
 import {ui, initUI} from './ui.js';
 import { initInput } from './input.js';
 import {pushHistory} from './save.js';
+import {GRASS} from './materials.js';
 
 function seedScene() {
     seed();
-
+    
     const sizes = [2, 4, 6, 8, 10];
     const xs = [40, 100, 160, 220, 280];
-    const groundY = Math.floor(H*0.75);
-    for (let i = 0; i <sizes.length; i++) {
-        placeTree(generateTree(sizes[i]), xs[i], groundY - 1);
+
+    for (let i = 0; i < sizes.length; i++) {
+        const x = xs[i];
+
+        let groundY = -1;
+        for (let y = 0; y < H; y++) {
+            if (get(x, y) === GRASS) {
+                groundY = y;
+                break;
+            }
+        }
+
+        if (groundY >= 0) {
+            placeTree(generateTree(sizes[i]), x, groundY - 1);
+        }
     }
 }
-
 
 initUI({
     onClear: () => {
