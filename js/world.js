@@ -4,15 +4,20 @@ import {idx} from './config.js';
 
 export const material = new Uint8Array(W*H);
 
+// prep for procedural generation
+const offset1 = Math.random() * 100; 
+const offset2 = Math.random() * 100;
+const offset3 = Math.random() * 100;
+
 export function seed() {
     const baseY = Math.floor(H*0.75);
 
     for (let x =0; x < W; x++) {
 
         // Sine waves for procederal generation
-        const wave1 = Math.sin(x*0.05)*15
-        const wave2 = Math.sin((x*0.2)+1.5)*20;
-        const wave3 = Math.sin(x*0.1)*5;
+        const wave1 = Math.sin((x*0.01)+offset1)*20;
+        const wave2 = Math.sin((x*0.03)+offset2)*10;
+        const wave3 = Math.sin((x*0.07)+offset3)*4;
 
         let groundY = Math.floor(baseY+wave1+wave2+wave3);
 
