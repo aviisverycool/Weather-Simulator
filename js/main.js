@@ -6,7 +6,7 @@ import { generateTree, treeBounds, placeTree } from './trees.js';
 import {ui, initUI} from './ui.js';
 import { initInput } from './input.js';
 import {pushHistory} from './save.js';
-import {GRASS} from './materials.js';
+import {GRASS, AIR} from './materials.js';
 
 const placedTrees = [];
 
@@ -14,7 +14,7 @@ function seedScene() {
     seed();
     placedTrees.length = 0;
 
-    const numTrees = Math.floor(Math.random() * 25);
+    const numTrees = Math.floor(Math.random() * 35);
     let attempts = 0;
 
     while (placedTrees.length < numTrees && attempts < 100) {
@@ -41,7 +41,7 @@ function seedScene() {
             }
         }
 
-        if (groundY >= 0) {
+        if (groundY >= 0 && get(x, groundY -1) === AIR) {
             const randomSize = Math.floor(Math.random() * 9)+2;
             placeTree(generateTree(randomSize), x, groundY - 1);
             placedTrees.push(x);
