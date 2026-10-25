@@ -8,6 +8,7 @@ export const material = new Uint8Array(W*H);
 
 
 export function seed() {
+    material.fill(AIR);
     const offset1 = Math.random() * 100;
     const offset2 = Math.random() * 100;
     const offset3 = Math.random() * 100;

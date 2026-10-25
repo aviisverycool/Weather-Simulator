@@ -59,9 +59,6 @@ initUI({
         ui.paused = !ui.paused;
         return ui.paused;
     },
-    onSizeChange: (size) => {
-        ui.treePattern= generateTree(size);
-    },
 });
 
 initInput();

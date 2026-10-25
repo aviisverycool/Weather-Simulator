@@ -8,16 +8,25 @@ export const WATER = 6;
 
 const rgb = (r, g, b) => (0xff << 24) | (b << 16) | (g << 8) | r;
 
-export const COLORS = new Uint32Array(7);
-COLORS[AIR] = rgb(0, 0, 0);
-COLORS[DIRT] = rgb(70, 37, 17);
-COLORS[STONE] = rgb(110, 110, 120);
-COLORS[GRASS] = rgb(59, 149, 62);
-COLORS[WOOD] = rgb(89, 60, 41);
-COLORS[LEAF] = rgb(60, 132, 64);
-COLORS[WATER] = rgb(50, 120, 200);
+function createVariants(r, g, b) {
+    const variation = 10;
+    const clamp = (value) => Math.max(0, Math.min(255, value));
+    return new Uint32Array([
+        rgb(r, g, b),
+        rgb(clamp(r - variation), clamp(g - variation), clamp(b - variation)),
+        rgb(clamp(r + variation), clamp(g + variation), clamp(b + variation))
+    ]);
+}
 
-export const FALLS = new Set([DIRT, GRASS]);
+export const VARIANTS = [];
+
+VARIANTS[AIR] = new Uint32Array(3).fill(rgb(0, 0, 0));
+VARIANTS[DIRT] = createVariants(70, 37, 17);
+VARIANTS[STONE] = createVariants(110, 110, 120);
+VARIANTS[GRASS] = createVariants(59, 149, 62);
+VARIANTS[WOOD] = createVariants(89, 60, 41);
+VARIANTS[LEAF] = createVariants(60, 132, 64);
+VARIANTS[WATER] = createVariants(50, 120, 200);
 
 export function line(x0, y0, x1, y1, cb) {
     const dx = Math.abs(x1 - x0), sx = x0 <x1 ? 1 : -1;

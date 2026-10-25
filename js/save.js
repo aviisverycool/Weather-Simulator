@@ -1,4 +1,5 @@
 import {material} from "./world.js";
+import {WATER} from "./materials.js";
 
 export function toBase64(u8) {
     let s = '';
@@ -22,18 +23,16 @@ export function saveWorld(slot = 'default') {
 export function loadWorld(slot = 'default') {
     const b64 = localStorage.getItem('world:' + slot);
     if (!b64) return false;
-    material.set(fromBase64(b64));
+    const savedMaterial = fromBase64(b64);
+    if (savedMaterial.length !== material.length) {
+        throw new RangeError(`Saved world has ${savedMaterial.length} cells; expected ${material.length}.`);
+    }
+    if (savedMaterial.some((value) => value > WATER)) {
+        throw new RangeError('Saved world contains an unknown material.');
+    }
+    pushHistory();
+    material.set(savedMaterial);
     return true;
-}
-
-export function downloadWorld() {
-    const blob = new Blob([material], {type: 'application/octet-stream'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'world.bin';
-    a.click();
-    URL.revokeObjectURL(url);
 }
 
 const history = [];

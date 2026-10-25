@@ -1,5 +1,5 @@
 import {W, H} from './config.js';
-import {COLORS} from './materials.js';
+import {VARIANTS} from './materials.js';
 import {material} from './world.js';
 
 const canvas = document.getElementById('c');
@@ -10,8 +10,16 @@ const ctx = canvas.getContext('2d');
 const img = ctx.createImageData(W, H);
 const buf = new Uint32Array(img.data.buffer);
 
+const noiseMap = new Uint8Array(W * H);
+for (let i = 0; i < noiseMap.length; i++) {
+    noiseMap[i] = Math.floor(Math.random() * 3);
+}
+
 export function render(hover, tool, brushSize, treePattern, treeBoundsFn) {
-    for (let i = 0; i < W * H; i++) buf[i] = COLORS[material[i]];
+    for (let i = 0; i < W * H; i++) {
+        buf[i] = VARIANTS[material[i]][noiseMap[i]];
+    }
+
     ctx.putImageData(img, 0, 0);
 
     if (!hover) return;

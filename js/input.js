@@ -35,13 +35,14 @@ export function initInput() {
     document.addEventListener('keydown', handleKey);
 
     canvas.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
         drawing = true;
         const {x, y} = eventToGrid(e);
         lastPos = {x, y};
         ui.hover = {x, y};
         pushHistory();
         applyAt(x, y);
-        try { canvas.setPointerCapture(e.pointerId); } catch {}
+        canvas.setPointerCapture(e.pointerId);
         if (ui.tool !== 'tree') {
             if (paintTimer) clearInterval(paintTimer);
             paintTimer = setInterval(() => {
@@ -68,7 +69,7 @@ export function initInput() {
         drawing = false;
         lastPos = null;
         if (paintTimer) clearInterval(paintTimer);
-        try { canvas.releasePointerCapture(e.pointerId); } catch {}
+        if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
     });
 
     canvas.addEventListener('pointercancel', () => {
@@ -95,7 +96,7 @@ function handleKey(e) {
             break;
         case ' ':
             e.preventDefault();
-            (document.getElementById('pause') || document.getElementById('Pause'))?.click();
+            document.getElementById('pause')?.click();
             break;
         case '[':
             adjustBrushSize(-1);

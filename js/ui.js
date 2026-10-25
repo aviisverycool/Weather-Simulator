@@ -66,7 +66,7 @@ function syncPanelMode() {
     }
 }
 
-export function initUI({onClear, onPauseToggle, onSizeChange}) {
+export function initUI({onClear, onPauseToggle}) {
     const matButtons = document.querySelectorAll('[data-mat]');
     const toolButtons = document.querySelectorAll('[data-tool]');
     const clearBtn = document.getElementById('clear');
@@ -105,7 +105,7 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
         pauseBtn.addEventListener('click', () => {
             const paused = onPauseToggle ? onPauseToggle() : ui.paused;
             ui.paused = paused;
-            pauseBtn.textContent = paused ? '▶Play' : '⏸Pause';
+            pauseBtn.textContent = paused ? 'Play' : 'Pause';
         });
     }
 
@@ -122,7 +122,6 @@ export function initUI({onClear, onPauseToggle, onSizeChange}) {
         ui.treePattern = generateTree(size);
         if (sizeInput) sizeInput.value = String(size);
         if (sizeValue) sizeValue.textContent = String(size);
-        if (onSizeChange) onSizeChange(size);
     };
 
     if (sizeInput) {
