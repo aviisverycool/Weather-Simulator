@@ -1,6 +1,6 @@
 import {W, H, idx} from './config.js';
 import {AIR, DIRT, GRASS, WATER} from './materials.js';
-import {material} from './world.js';
+import {material, variationMap} from './world.js';
 
 export const moved = new Uint8Array(W * H);
 
@@ -10,6 +10,11 @@ function swap(a, b) {
     const temp = material[a];
     material[a] = material[b];
     material[b] = temp;
+
+    const tempVar = variationMap[a];
+    variationMap[a] = variationMap[b];
+    variationMap[b] = tempVar; 
+
     moved[a] = 1;
     moved[b] = 1;
 }
