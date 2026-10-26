@@ -57,7 +57,6 @@ initUI({
     onClear: () => {           
         pushHistory();
         clear();
-        seedScene();
     },
     onPauseToggle: () => {
         ui.paused = !ui.paused;
