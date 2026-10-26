@@ -17,3 +17,7 @@ week 5: implement auto terrain generation
 week 6: refine everything and clean up dead code
 
 <img width="1920" height="957" alt="image" src="https://github.com/user-attachments/assets/910f95f3-6f1f-4d4f-9b60-db383f6694b1" />
+This image is from the first week of development (~4.5 hours).
+
+<img width="1920" height="1048" alt="image" src="https://github.com/user-attachments/assets/d2a0ba4b-5de4-4b8d-a346-0319b0f1c4d6" />
+This image is from the second week of development (~11 hours).
