@@ -4,6 +4,7 @@ import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';
 import {pushHistory} from './save.js';
+import {get} from './world.js';
 
 const canvas = document.getElementById('c');
 let drawing = false;
@@ -19,14 +20,24 @@ function eventToGrid(e) {
 
 function applyAt(x, y) {
     if (x < 0 || x >= W || y < 0 || y >= H) return;
+
     if (ui.tool === 'tree') {
         placeTree(ui.treePattern, x, y);
         return;
     }
+
     if (ui.tool === 'erase' || ui.tool === 'eraser') {
         brush(x, y, AIR, ui.brushSize);
         return;
     }
+
+    if (ui.tool === 'eyedropper') {
+        const mat = get(x, y);
+        const nextTool = mat === AIR ? document.querySelector('[data-tool="erase"]') : document.querySelector(`[data-mat="${mat}"]`);
+        nextTool?.click();
+        return;
+    }
+
     brush(x, y, ui.selectedMat, ui.brushSize);
 }
 

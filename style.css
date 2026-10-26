@@ -8,6 +8,10 @@ html, body {
     overflow: hidden;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
     flex-direction:column;
@@ -49,7 +53,8 @@ canvas {
 }
 
 #bottom-bar {
-    height: 120px;
+    height: 144px;
+    flex: 0 0 144px;
     background: rgba(15, 15, 20, 0.95);
     border-top: 1px solid #333;
     display:flex;
@@ -113,13 +118,26 @@ input[type=range] {
 
 .control-buttons {
     display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
 }
 
 .control-buttons button {
-    flex: 1;
-    padding: 6px 0;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 6px 4px;
+    font-size: 12px;
+}
+
+.control-row {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+}
+
+.control-row button {
+    width: auto;
 }
 
 .w-label {
