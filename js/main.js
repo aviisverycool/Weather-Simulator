@@ -50,6 +50,10 @@ function seedScene() {
 }
 
 initUI({
+    onNewMap: () => {
+        pushHistory();
+        seedScene();
+    },
     onClear: () => {           
         pushHistory();
         clear();

@@ -66,7 +66,7 @@ function syncPanelMode() {
     }
 }
 
-export function initUI({onClear, onPauseToggle}) {
+export function initUI({onClear, onPauseToggle, onNewMap}) {
     const matButtons = document.querySelectorAll('[data-mat]');
     const toolButtons = document.querySelectorAll('[data-tool]');
     const clearBtn = document.getElementById('clear');
@@ -77,6 +77,7 @@ export function initUI({onClear, onPauseToggle}) {
     const loadBtn = document.getElementById('load');
     const undoBtn = document.getElementById('undo');
     const togglePanelBtn = document.getElementById('toggle-panel');
+    const newMapBtn = document.getElementById('new-map');
 
     matButtons.forEach((b) => {
         b.addEventListener('click', () => {
@@ -98,6 +99,12 @@ export function initUI({onClear, onPauseToggle}) {
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             if (onClear) onClear();
+        });
+    }
+
+    if (newMapBtn) {
+        newMapBtn.addEventListener('click', () => {
+            if (onNewMap) onNewMap();
         });
     }
 

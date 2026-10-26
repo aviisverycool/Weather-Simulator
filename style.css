@@ -68,7 +68,7 @@ canvas {
 }
 
 #right-panel {
-    width: 280px;
+    width: 340px;
     padding: 12px;
     display: flex;
     flex-direction: column;
