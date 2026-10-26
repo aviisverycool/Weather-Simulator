@@ -44,7 +44,6 @@ function applyAt(x, y) {
 export function initInput() {
     let paintTimer = null;
     document.addEventListener('keydown', handleKey);
-
     canvas.addEventListener('pointerdown', (e) => {
         if (e.button !== 0) return;
         drawing = true;
@@ -95,7 +94,7 @@ function handleKey(e) {
     const tag = e.target && e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER};
+    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER, '7': FIRE, '8': SMOKE};
     if (matMap[e.key] !== undefined) {
         document.querySelector(`[data-mat="${matMap[e.key]}"]`)?.click();
         return;

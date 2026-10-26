@@ -1,5 +1,5 @@
 import {W, H, idx} from './config.js';
-import {AIR, DIRT, GRASS, WATER} from './materials.js';
+import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF} from './materials.js';
 import {material, variationMap} from './world.js';
 
 export const moved = new Uint8Array(W * H);
@@ -114,6 +114,74 @@ export function step() {
             const m = material[i];
             if (m === DIRT || m === GRASS) tryFall(x, y);
             else if (m === WATER) stepWater(x, y);
+            else if (m === FIRE) stepFire(x, y);
+            else if (m === SMOKE) stepSmoke(x, y);
+        }
+    }
+}
+
+function stepFire(x, y) {
+    const i = idx(x, y)
+    if (moved[i]) return;
+
+    // dissipate if it touches water
+    const dirs = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+    for (const [dx, dy] of dirs) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+        const j = idx(nx, ny);
+        if (material[j] === WATER) {
+            material[i] = SMOKE;
+            variationMap[i] = Math.floor(Math.random() * 3);
+            return;
+        }
+    }
+
+    // Burn naturally.
+    if (Math.random() < 0.05) {
+        material[i] = SMOKE;
+        variationMap[i] = Math.floor(Math.random() * 3);
+        return;
+    }
+
+    // Spread to nearby wood and leaves.
+    for (const [dx, dy] of dirs) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+        const j = idx(nx, ny);
+        if ((material[j] === WOOD || material[j] === LEAF) && Math.random() < 0.1) {
+            material[j] = FIRE;
+            variationMap[j] = Math.floor(Math.random() * 3);
+        }
+    }
+
+    // Rise into empty space.
+    if (y > 0 && material[idx(x, y - 1)] === AIR) {
+        swap(i, idx(x, y-1));
+    }
+}
+
+function stepSmoke(x, y) {
+    const i = idx(x, y);
+    if (moved[i]) return;
+
+    if (Math.random()<0.02) {
+        material[i] = AIR;
+        return;
+    }
+
+    const dir = Math.random() <0.5 ? -1 : 1;
+    const moves = [[0, -1], [dir, -1]];
+
+    for (const [dx, dy] of moves) {
+        const nx = dx + x, ny = y + dy;
+        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+        const j = idx(nx, ny);
+        if (material[j] === AIR) {
+            swap(i, j);
+            return;
         }
     }
 }

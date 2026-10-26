@@ -5,6 +5,8 @@ export const GRASS = 3;
 export const WOOD = 4;
 export const LEAF = 5;
 export const WATER = 6;
+export const FIRE = 7;
+export const SMOKE = 8;
 
 const rgb = (r, g, b) => (0xff << 24) | (b << 16) | (g << 8) | r;
 
@@ -27,6 +29,8 @@ VARIANTS[GRASS] = createVariants(59, 149, 62);
 VARIANTS[WOOD] = createVariants(89, 60, 41);
 VARIANTS[LEAF] = createVariants(60, 132, 64);
 VARIANTS[WATER] = createVariants(50, 120, 200);
+VARIANTS[FIRE] = createVariants(255, 100, 0);
+VARIANTS[SMOKE] = createVariants(80, 80, 80);
 
 export function line(x0, y0, x1, y1, cb) {
     const dx = Math.abs(x1 - x0), sx = x0 <x1 ? 1 : -1;
