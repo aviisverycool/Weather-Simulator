@@ -1,5 +1,5 @@
-import {LEAF, WOOD} from './materials.js';
-import {set} from './world.js';
+import {LEAF, WOOD, AIR} from './materials.js';
+import {get, set} from './world.js';
 import {W} from './config.js';
 
 export function generateTree(size) {
@@ -48,7 +48,12 @@ export function placeTree(pattern, cx, cy) {
         for (let tx = 0; tx < pattern[ty].length; tx++) {
             const v = pattern[ty][tx];
             if (!v) continue;
-            set(px + tx, py + ty, v);
+            const x = px + tx;
+            const y = py + ty;
+            
+            if (get(x, y) === AIR) {
+                set(x, y, v);
+            }
         }
     }
 }

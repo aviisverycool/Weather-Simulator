@@ -158,8 +158,19 @@ function stepFire(x, y) {
     }
 
     // Rise into empty space.
-    if (y > 0 && material[idx(x, y - 1)] === AIR) {
-        swap(i, idx(x, y-1));
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const moves=[[0, -1], [dir, -1], [-dir, -1], [dir, 0], [-dir, 0]];
+
+    for (const [dx, dy] of moves) {
+        const nx = x + dx;
+        const ny = y + dy;
+        
+        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+        const j = idx(nx, ny);
+        if (material[j] === AIR) {
+            swap(i, j);
+            return;
+        }
     }
 }
 
