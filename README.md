@@ -2,6 +2,10 @@
 A sandbox where you can see how weather affects the surrounding environment and what combinations create what weather.
 to play this simulator, just click on the link.
 
+## Vercel Analytics
+
+This plain HTML site loads Vercel Web Analytics from `/_vercel/insights/script.js`; no npm package is needed. Enable **Analytics** for the project in the Vercel dashboard, then deploy the change. Analytics data is collected from visits to the deployed site.
+
 right now, i have the sandbox implemented, but in the future, i will refine the sandbox and add silders to control elements of the weather
 
 week 1: rough sandbox
