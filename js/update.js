@@ -1,5 +1,5 @@
 ﻿import {W, H, idx} from './config.js';
-import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF} from './materials.js';
+import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF, STEAM} from './materials.js';
 import {material, variationMap} from './world.js';
 
 export const moved = new Uint8Array(W * H);
@@ -35,7 +35,7 @@ function tryFall(x, y) {
 
     const below = idx(x, y + 1);
     
-    if (material[below] === AIR || material[below] === WATER || material[below] === SMOKE || material[below] === FIRE) {
+    if (material[below] === AIR || material[below] === WATER || material[below] === SMOKE || material[below] === FIRE || material[below] === STEAM) {
         moveInto(i, below);
         return;
     }
@@ -46,7 +46,7 @@ function tryFall(x, y) {
         if (nx < 0 || nx >= W) continue;
 
         const diag = idx(nx, y + 1);
-        if (material[diag] === AIR || material[diag] === WATER || material[diag] === SMOKE || material[diag] === FIRE) {
+        if (material[diag] === AIR || material[diag] === WATER || material[diag] === SMOKE || material[diag] === FIRE || material[diag] === STEAM) {
             moveInto(i, diag);
             return;
         }
@@ -58,7 +58,7 @@ function stepWater(x, y) {
     if (moved[i]) return;
 
     const below = idx(x, y + 1);
-    if (y + 1 < H && (material[below] === AIR || material[below] === SMOKE || material[below] === FIRE)) {
+    if (y + 1 < H && (material[below] === AIR || material[below] === SMOKE || material[below] === FIRE || material[below] === STEAM)) {
         moveInto(i, below);
         return;
     }
@@ -70,7 +70,7 @@ function stepWater(x, y) {
         if (nx < 0 || nx >= W || y + 1 >= H) continue;
         const diag = idx(nx, y + 1);
         
-        if (material[diag] === AIR || material[diag] === SMOKE || material[diag] === FIRE) {
+        if (material[diag] === AIR || material[diag] === SMOKE || material[diag] === FIRE || material[diag] === STEAM) {
             moveInto(i, diag);
             return;
         }
@@ -88,7 +88,7 @@ function stepWater(x, y) {
             if (nx < 0 || nx >= W) break;
             const target = idx(nx, y);
 
-            if ((material[target] !== AIR && material[target] !== SMOKE && material[target] !== FIRE) || moved[target]) break;
+            if ((material[target] !== AIR && material[target] !== SMOKE && material[target] !== FIRE && material[target] !== STEAM) || moved[target]) break;
 
             tx = nx;
             dist++;
@@ -101,7 +101,7 @@ function stepWater(x, y) {
 
     if (bestDir !== 0) {
         const target = idx(x + bestDir, y);
-        if ((material[target] === AIR || material[target] === SMOKE || material[target] === FIRE) && !moved[target]) {
+        if ((material[target] === AIR || material[target] === SMOKE || material[target] === FIRE || material[target] === STEAM) && !moved[target]) {
             swap(i, target);
         }
     }
@@ -127,6 +127,7 @@ export function step() {
             else if (m === WATER) stepWater(x, y);
             else if (m === FIRE) stepFire(x, y);
             else if (m === SMOKE) stepSmoke(x, y);
+            else if (m === STEAM) stepSteam(x, y);
         }
     }
 }
@@ -143,8 +144,14 @@ function stepFire(x, y) {
         if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
         const j = idx(nx, ny);
         if (material[j] === WATER) {
+            material[j] = STEAM;
+            variationMap[j] = Math.floor(Math.random()*3);
+
             material[i] = SMOKE;
-            variationMap[i] = Math.floor(Math.random() * 3);
+            variationMap[i] = Math.floor(Math.random()*3);
+
+            moved[i] = 1;
+            moved[j] = 1;
             return;
         }
     }
@@ -210,7 +217,7 @@ function stepSmoke(x, y) {
 
 function moveInto(a, b) {
     const mB = material[b];
-    if (mB === WATER || mB === SMOKE || mB === FIRE) {
+    if (mB === WATER || mB === SMOKE || mB === FIRE || mB === STEAM) {
         const bx = b%W
         const by = Math.floor(b/W)
         const dirs = Math.random() < 0.5 ? [-1, 1] : [1, -1];
@@ -229,4 +236,31 @@ function moveInto(a, b) {
         }
     }
     swap(a,b);
+}
+
+function stepSteam(x, y) {
+    const i = idx(x, y);
+    if (moved[i]) return;
+    
+    if(Math.random() < 0.005) {
+        material[i] = WATER;
+        variationMap[i] = Math.floor(Math.random()*3);
+        return;
+    }
+
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const moves = [[0, -1], [dir, -1], [-dir, -1]];
+
+    for (const [dx, dy] of moves) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx < 0 || nx >= W || ny < 0 ||ny >= H) continue;
+        const j = idx(nx, ny);
+
+        if (material[j] === AIR || material[j] === SMOKE) {
+            swap(i, j);
+            return;
+        }
+    }
 }

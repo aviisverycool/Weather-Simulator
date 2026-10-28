@@ -1,5 +1,5 @@
 import {W, H} from './config.js';
-import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, FIRE, SMOKE, line} from './materials.js';
+import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, FIRE, SMOKE, STEAM, line} from './materials.js';
 import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';
@@ -94,7 +94,7 @@ function handleKey(e) {
     const tag = e.target && e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER, '7': FIRE, '8': SMOKE};
+    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER, '7': FIRE, '8': SMOKE, '9': STEAM};
     if (matMap[e.key] !== undefined) {
         document.querySelector(`[data-mat="${matMap[e.key]}"]`)?.click();
         return;
