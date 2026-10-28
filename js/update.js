@@ -1,8 +1,16 @@
-import {W, H, idx} from './config.js';
+﻿import {W, H, idx} from './config.js';
 import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF} from './materials.js';
 import {material, variationMap} from './world.js';
 
 export const moved = new Uint8Array(W * H);
+
+function isDisplacedBySolid(m) {
+    return m === AIR || m === WATER || m === SMOKE || m === FIRE;
+}
+
+function isDisplacedByLiquid(m) {
+    return m === AIR || m === SMOKE || m === FIRE;
+}
 
 function swap(a, b) {
     if (a === b) return;
@@ -26,8 +34,9 @@ function tryFall(x, y) {
     if (y + 1 >= H) return;
 
     const below = idx(x, y + 1);
-    if (material[below] === AIR) {
-        swap(i, below);
+    
+    if (material[below] === AIR || material[below] === WATER || material[below] === SMOKE || material[below] === FIRE) {
+        moveInto(i, below);
         return;
     }
 
@@ -37,8 +46,8 @@ function tryFall(x, y) {
         if (nx < 0 || nx >= W) continue;
 
         const diag = idx(nx, y + 1);
-        if (material[diag] === AIR) {
-            swap(i, diag);
+        if (material[diag] === AIR || material[diag] === WATER || material[diag] === SMOKE || material[diag] === FIRE) {
+            moveInto(i, diag);
             return;
         }
     }
@@ -48,8 +57,9 @@ function stepWater(x, y) {
     const i = idx(x, y);
     if (moved[i]) return;
 
-    if (y + 1 < H && material [idx(x, y +1)] === AIR) {
-        swap (i, idx(x, y +1));
+    const below = idx(x, y + 1);
+    if (y + 1 < H && (material[below] === AIR || material[below] === SMOKE || material[below] === FIRE)) {
+        moveInto(i, below);
         return;
     }
 
@@ -58,9 +68,10 @@ function stepWater(x, y) {
     for (const dx of order) {
         const nx = x + dx;
         if (nx < 0 || nx >= W || y + 1 >= H) continue;
-        const diag = idx(nx, y +1);
-        if (material[diag] === AIR) {
-            swap(i, diag)
+        const diag = idx(nx, y + 1);
+        
+        if (material[diag] === AIR || material[diag] === SMOKE || material[diag] === FIRE) {
+            moveInto(i, diag);
             return;
         }
     }
@@ -77,7 +88,7 @@ function stepWater(x, y) {
             if (nx < 0 || nx >= W) break;
             const target = idx(nx, y);
 
-            if(material[target] !== AIR || moved[target]) break;
+            if ((material[target] !== AIR && material[target] !== SMOKE && material[target] !== FIRE) || moved[target]) break;
 
             tx = nx;
             dist++;
@@ -90,7 +101,7 @@ function stepWater(x, y) {
 
     if (bestDir !== 0) {
         const target = idx(x + bestDir, y);
-        if (material[target] === AIR && !moved[target]) {
+        if ((material[target] === AIR || material[target] === SMOKE || material[target] === FIRE) && !moved[target]) {
             swap(i, target);
         }
     }
@@ -195,4 +206,27 @@ function stepSmoke(x, y) {
             return;
         }
     }
+}
+
+function moveInto(a, b) {
+    const mB = material[b];
+    if (mB === WATER || mB === SMOKE || mB === FIRE) {
+        const bx = b%W
+        const by = Math.floor(b/W)
+        const dirs = Math.random() < 0.5 ? [-1, 1] : [1, -1];
+
+        for (const dx of dirs) {
+            const nx = bx + dx;
+            if (nx >= 0 && nx < W) {
+                const n = idx(nx, by);
+
+                if (material[n] === AIR && !moved[n]) {
+                    swap(b, n);
+                    swap(a, b);
+                    return
+                }
+            }
+        }
+    }
+    swap(a,b);
 }

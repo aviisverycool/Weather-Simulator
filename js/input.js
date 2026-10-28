@@ -1,5 +1,5 @@
 import {W, H} from './config.js';
-import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, line} from './materials.js';
+import {AIR, DIRT, STONE, GRASS, WOOD, LEAF, WATER, FIRE, SMOKE, line} from './materials.js';
 import {brush} from './paint.js';
 import {placeTree} from './trees.js';
 import {ui} from './ui.js';

@@ -33,8 +33,11 @@ export function render(hover, tool, brushSize, treePattern, treeBoundsFn) {
     }
     else {
         ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.beginPath();
-        ctx.arc(hover.x + 0.5, hover.y + 0.5, brushSize, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx.strokeRect(
+            hover.x - brushSize + 0.5,
+            hover.y - brushSize + 0.5,
+            brushSize * 2 + 1,
+            brushSize * 2 + 1
+        );
     }
 }
