@@ -1,5 +1,5 @@
 import {material, variationMap} from "./world.js";
-import {ICE, WATER} from "./materials.js";
+import {SNOW, WATER} from "./materials.js";
 
 export function toBase64(u8) {
     let s = '';
@@ -31,7 +31,7 @@ function deserializeWorld(payload) {
     const savedMaterial = payload.subarray(0, material.length);
     const savedVariation = payload.subarray(material.length);
 
-    if (savedMaterial.some((value) => value > ICE)) {
+    if (savedMaterial.some((value) => value > SNOW)) {
         throw new RangeError('Saved world contains an unknown material.');
     }
     if (savedVariation.some((value) => value > 2)) {

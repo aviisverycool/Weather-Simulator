@@ -1,5 +1,5 @@
 ﻿import {W, H, idx} from './config.js';
-import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF, STEAM, ICE} from './materials.js';
+import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF, STEAM, ICE, SNOW} from './materials.js';
 import {material, variationMap} from './world.js';
 import {ui} from './ui.js';
 
@@ -60,7 +60,12 @@ function stepWater(x, y) {
 
     if (ui.weather.temperature <=0) {
         if (Math.random() <0.01) {
-            material[i] = ICE;
+            if (y+1<H && material[idx(x, y+1)] === AIR) {
+                material[i] = SNOW;
+            }
+            else {
+                material[i] = ICE;
+            }
             variationMap[i] = Math.floor(Math.random()*3);
             return;
         }
@@ -138,6 +143,7 @@ export function step() {
             else if (m === SMOKE) stepSmoke(x, y);
             else if (m === STEAM) stepSteam(x, y);
             else if (m === ICE) stepIce(x, y);
+            else if (m === SNOW) stepSnow(x, y);
         }
     }
 }
@@ -295,6 +301,41 @@ function stepIce(x, y) {
         if (Math.random() < 0.01) {
             material[i] = WATER;
             variationMap[i] = Math.floor(Math.random()*3);
+            return;
+        }
+    }
+}
+
+function stepSnow(x, y) {
+    const i = idx(x, y);
+    if (moved[i]) return;
+
+    if (ui.weather.temperature > 0) {
+        if (Math.random() < 0.01) {
+            material[i] = WATER;
+            variationMap[i] = Math.floor(Math.random()*3);
+            return;
+        }
+    }
+
+    if (y+1 >=H) return;
+    if (Math.random() < 0.2) return;
+
+    const below = idx(x, y+1);
+
+    if (material[below] === AIR || material[below] === WATER || material[below] === SMOKE || material[below] === FIRE || material[below] === STEAM) {
+        moveInto(i, below);
+        return;
+    }
+
+    const directions = Math.random() < 0.5 ? [-1, 1] : [1, -1];
+    for (const dx of directions) {
+        const nx = x + dx;
+        if (nx < 0 || nx >= W) continue;
+
+        const diag = idx(nx, y + 1);
+        if (material[diag] === AIR || material[diag] === WATER || material[diag] === SMOKE || material[diag] === FIRE || material[diag] === STEAM) {
+            moveInto(i, diag);
             return;
         }
     }
