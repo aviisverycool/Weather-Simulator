@@ -137,7 +137,7 @@ export function step() {
             else if (m === FIRE) stepFire(x, y);
             else if (m === SMOKE) stepSmoke(x, y);
             else if (m === STEAM) stepSteam(x, y);
-            else if (m === STEAM) stepIce(x, y);
+            else if (m === ICE) stepIce(x, y);
         }
     }
 }
@@ -157,6 +157,18 @@ function stepFire(x, y) {
             material[j] = STEAM;
             variationMap[j] = Math.floor(Math.random()*3);
 
+            material[i] = SMOKE;
+            variationMap[i] = Math.floor(Math.random()*3);
+
+            moved[i] = 1;
+            moved[j] = 1;
+            return;
+        }
+
+        else if (material[j] === ICE) {
+            material[j] = WATER;
+            variationMap[j] = Math.floor(Math.random()*3);
+            
             material[i] = SMOKE;
             variationMap[i] = Math.floor(Math.random()*3);
 
