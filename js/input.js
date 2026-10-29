@@ -94,12 +94,6 @@ function handleKey(e) {
     const tag = e.target && e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-    const matMap = {'1': DIRT, '2': STONE, '3': GRASS, '4': WOOD, '5': LEAF, '6': WATER, '7': FIRE, '8': SMOKE, '9': STEAM};
-    if (matMap[e.key] !== undefined) {
-        document.querySelector(`[data-mat="${matMap[e.key]}"]`)?.click();
-        return;
-    }
-
     switch (e.key) {
         case 'e': case 'E':
             document.querySelector('[data-tool="erase"]')?.click();

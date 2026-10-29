@@ -1,6 +1,7 @@
 ﻿import {W, H, idx} from './config.js';
-import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF, STEAM} from './materials.js';
+import {AIR, DIRT, GRASS, WATER, FIRE, SMOKE, WOOD, LEAF, STEAM, ICE} from './materials.js';
 import {material, variationMap} from './world.js';
+import {ui} from './ui.js';
 
 export const moved = new Uint8Array(W * H);
 
@@ -56,6 +57,14 @@ function tryFall(x, y) {
 function stepWater(x, y) {
     const i = idx(x, y);
     if (moved[i]) return;
+
+    if (ui.weather.temperature <=0) {
+        if (Math.random() <0.01) {
+            material[i] = ICE;
+            variationMap[i] = Math.floor(Math.random()*3);
+            return;
+        }
+    }
 
     const below = idx(x, y + 1);
     if (y + 1 < H && (material[below] === AIR || material[below] === SMOKE || material[below] === FIRE || material[below] === STEAM)) {
@@ -128,6 +137,7 @@ export function step() {
             else if (m === FIRE) stepFire(x, y);
             else if (m === SMOKE) stepSmoke(x, y);
             else if (m === STEAM) stepSteam(x, y);
+            else if (m === STEAM) stepIce(x, y);
         }
     }
 }
@@ -260,6 +270,19 @@ function stepSteam(x, y) {
 
         if (material[j] === AIR || material[j] === SMOKE) {
             swap(i, j);
+            return;
+        }
+    }
+}
+
+function stepIce(x, y) {
+    const i = idx(x, y);
+    if (moved[i]) return;
+
+    if (ui.weather.temperature > 0) {
+        if (Math.random() < 0.01) {
+            material[i] = WATER;
+            variationMap[i] = Math.floor(Math.random()*3);
             return;
         }
     }
