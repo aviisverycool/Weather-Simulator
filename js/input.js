@@ -46,10 +46,15 @@ export function initInput() {
     document.addEventListener('keydown', handleKey);
     canvas.addEventListener('pointerdown', (e) => {
         if (e.button !== 0) return;
-        drawing = true;
         const {x, y} = eventToGrid(e);
-        lastPos = {x, y};
         ui.hover = {x, y};
+        if (ui.tool === 'eyedropper') {
+            applyAt(x, y);
+            return;
+        }
+
+        drawing = true;
+        lastPos = {x, y};
         pushHistory();
         applyAt(x, y);
         canvas.setPointerCapture(e.pointerId);

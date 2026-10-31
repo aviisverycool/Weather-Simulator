@@ -5,6 +5,29 @@ import {material, variationMap} from './world.js';
 const canvas = document.getElementById('c');
 canvas.width = W;
 canvas.height = H;
+const wrap = document.getElementById('wrap');
+
+export function fitCanvas() {
+    if (!wrap) return;
+
+    const availW = wrap.clientWidth;
+    const availH = wrap.clientHeight;
+    if (availW <= 0 || availH <= 0) return;
+
+    const scale = Math.min(availW / W, availH / H);
+    canvas.style.width = `${W * scale}px`;
+    canvas.style.height = `${H * scale}px`;
+}
+
+export function initCanvasResize() {
+    fitCanvas();
+
+    if (wrap && typeof ResizeObserver === 'function') {
+        new ResizeObserver(fitCanvas).observe(wrap);
+    }
+    window.addEventListener('resize', fitCanvas);
+    window.addEventListener('orientationchange', fitCanvas);
+}
 
 const ctx = canvas.getContext('2d');
 const img = ctx.createImageData(W, H);
