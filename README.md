@@ -12,7 +12,7 @@ week 3: start adding sliders for weather
 
 week 4: start making slider more interactive with strengths of the weather
 
-week 5: implement auto terrain generation
+week 5: implement/improve auto terrain generation
 
 week 6: refine everything and clean up dead code
 

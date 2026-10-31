@@ -74,3 +74,5 @@ export function undo() {
     variationMap.set(snapshot.variation);
     return true;
 }
+
+export function historyLength() { return history.length; }

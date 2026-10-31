@@ -159,3 +159,25 @@ input[type=range] {
     font-variant-numeric: tabular-nums;
     color: #fff;
 }
+
+#debug {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.78);
+    color: #e0e0e0;
+    font: 12px/1.35 ui-monospace, Menlo, Consolas, monospace;
+    white-space: pre;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 2px #000000;
+    min-width: 300px;
+}
+
+#debug.visible {
+    display: block;
+}

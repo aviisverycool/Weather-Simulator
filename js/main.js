@@ -7,6 +7,7 @@ import {ui, initUI} from './ui.js';
 import { initInput } from './input.js';
 import {pushHistory} from './save.js';
 import {GRASS, AIR} from './materials.js';
+import {initDebug, tickDebug} from './debug.js';
 
 const placedTrees = [];
 
@@ -66,25 +67,34 @@ initUI({
 
 initInput();
 
+initDebug();
 
 let accumulator = 0;
 let last = performance.now();
-const BASE_TICK = 1000 / 60; // 60 tps at 100% speed
+const BASE_TICK = 1000 / 60;
 
 function loop(now) {
     const dt = Math.min(now - last, 100);
     last = now;
 
+    let stepsThisFrame = 0;
+    let stepMs = 0;
+
     if (!ui.paused) {
         accumulator += dt * ui.speed;
-        const maxSteps = 5;
-        let steps = 0;
-        while (accumulator >= BASE_TICK && steps++ < maxSteps) {
+        const stepStart = performance.now();
+        while (accumulator >= BASE_TICK && stepsThisFrame < 5) {
             step();
             accumulator -= BASE_TICK;
+            stepsThisFrame++;
         }
+        stepMs = performance.now() - stepStart;
     }
+
     render(ui.hover, ui.tool, ui.brushSize, ui.treePattern, treeBounds);
+
+    tickDebug(now, { frameMs: dt, stepsThisFrame, stepMs, accumulator });
+
     requestAnimationFrame(loop);
 }
 
