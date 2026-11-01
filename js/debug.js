@@ -88,7 +88,7 @@ function flush() {
     }
     const mem = performance.memory;
     const heap = mem
-    ? `heap ${(mem.usedJSHeapSize / 1048576).toFixed(1)} / ${(mem.usedJSHeapSize / 1048576).toFixed(0)} MB`
+    ? `heap ${(mem.usedJSHeapSize / 1048576).toFixed(1)} / ${(mem.totalJSHeapSize / 1048576).toFixed(0)} MB`
     : 'heap -';
 
     const row = (k, v) => `${k.padEnd(9)}${v}`;

@@ -148,70 +148,76 @@ export function step() {
     }
 }
 
+const CARDINALS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const ALL8 = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+
+const inBounds = (x, y) => x >= 0 && x < W && y >= 0 && y < H;
+
 function stepFire(x, y) {
-    const i = idx(x, y)
+    const i = idx(x, y);
     if (moved[i]) return;
 
-    // dissipate if it touches water
-    const dirs = [[0, -1], [0, 1], [-1, 0], [1, 0]];
-    for (const [dx, dy] of dirs) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+    for (const [dx, dy] of CARDINALS) {
+        const nx = x + dx, ny = y + dy;
+        if (!inBounds(nx, ny)) continue;
         const j = idx(nx, ny);
         if (material[j] === WATER) {
             material[j] = STEAM;
-            variationMap[j] = Math.floor(Math.random()*3);
-
+            variationMap[j] = Math.floor(Math.random() * 3);
             material[i] = SMOKE;
-            variationMap[i] = Math.floor(Math.random()*3);
-
-            moved[i] = 1;
-            moved[j] = 1;
+            variationMap[i] = Math.floor(Math.random() * 3);
+            moved[i] = moved[j] = 1;
             return;
         }
 
-        else if (material[j] === ICE) {
+        if (material[j] === ICE) {
             material[j] = WATER;
-            variationMap[j] = Math.floor(Math.random()*3);
-            
+            variationMap[j] = Math.floor(Math.random() * 3);
             material[i] = SMOKE;
-            variationMap[i] = Math.floor(Math.random()*3);
-
-            moved[i] = 1;
-            moved[j] = 1;
+            variationMap[i] = Math.floor(Math.random() * 3);
+            moved[i] = moved[j] = 1;
             return;
         }
     }
 
-    // Burn naturally.
-    if (Math.random() < 0.05) {
+    // Weather affects spread and burn duration.
+    const w = ui.weather;
+    const dryness = (100 - w.humidity) / 100;
+    const heat = Math.max(0, Math.min(1, (w.temperature + 20) / 60));
+    const wind = Math.max(0, Math.min(1, w.windSpeed / 100));
+    const vigor = 0.35 + 0.65 * dryness;
+    const deathChance = 0.05 + (1 - heat) * 0.03 + (1 - dryness) * 0.05;
+
+    for (const [dx, dy] of ALL8) {
+        const nx = x + dx, ny = y + dy;
+        if (!inBounds(nx, ny)) continue;
+        const j = idx(nx, ny);
+        const m = material[j];
+        if (m !== WOOD && m !== LEAF) continue;
+        const base = m === LEAF ? 0.55 : 0.35;
+        const windBias = Math.max(0, 1 + wind * dx);
+        const chance = base * vigor * windBias;
+
+        if (Math.random() < chance) {
+            material[j] = FIRE;
+            variationMap[j] = Math.floor(Math.random() * 3);
+            moved[j] = 1;
+        }
+    }
+
+    if (Math.random() < deathChance) {
         material[i] = SMOKE;
         variationMap[i] = Math.floor(Math.random() * 3);
         return;
     }
 
-    // Spread to nearby wood and leaves.
-    for (const [dx, dy] of dirs) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
-        const j = idx(nx, ny);
-        if ((material[j] === WOOD || material[j] === LEAF) && Math.random() < 0.1) {
-            material[j] = FIRE;
-            variationMap[j] = Math.floor(Math.random() * 3);
-        }
-    }
-
-    // Rise into empty space.
     const dir = Math.random() < 0.5 ? -1 : 1;
-    const moves=[[0, -1], [dir, -1], [-dir, -1], [dir, 0], [-dir, 0]];
+    const moves = [[0, -1], [dir, -1], [dir, 0], [-dir, 0]];
 
     for (const [dx, dy] of moves) {
         const nx = x + dx;
         const ny = y + dy;
-        
-        if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+        if (!inBounds(nx, ny)) continue;
         const j = idx(nx, ny);
         if (material[j] === AIR) {
             swap(i, j);
