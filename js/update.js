@@ -200,7 +200,6 @@ function stepFire(x, y) {
     const w = ui.weather;
     const dryness = (100 - w.humidity) / 100;
     const heat = Math.max(0, Math.min(1, (w.temperature + 20) / 60));
-    const wind = Math.max(0, Math.min(1, w.windSpeed / 100));
     const vigor = 0.35 + 0.65 * dryness;
     const deathChance = 0.05 + (1 - heat) * 0.03 + (1 - dryness) * 0.05;
 
