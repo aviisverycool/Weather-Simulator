@@ -26,7 +26,7 @@ function syncWeatherUI() {
         humid: document.getElementById('wHumid'),
         press: document.getElementById('wPress'),
         wind: document.getElementById('wWindS'),
-        windD: document.getElementById('windD'),
+        windD: document.getElementById('wWindD'),
     };
 
     const weatherLabels = {

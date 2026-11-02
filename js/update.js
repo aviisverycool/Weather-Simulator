@@ -252,11 +252,6 @@ function stepSmoke(x, y) {
     }
 
     const w = wind();
-    if (Math.random() < 0.02) {
-        material[i] = AIR; 
-        return;
-    }
-
     if (Math.abs(w) > 0.05 && Math.random() < Math.abs(w)) {
         const nx = x + Math.sign(w);
         if (nx >= 0 && nx < W) {
