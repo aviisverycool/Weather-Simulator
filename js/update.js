@@ -5,6 +5,16 @@ import {ui} from './ui.js';
 
 export const moved = new Uint8Array(W * H);
 
+const CARDINALS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const ALL8 = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+
+function wind() {
+    const w = ui.weather;
+    const speed = w.windSpeed/100;
+    const dir = w.windDirection ?? 0;
+    return speed * dir;
+}
+
 function isDisplacedBySolid(m) {
     return m === AIR || m === WATER || m === SMOKE || m === FIRE;
 }
@@ -148,9 +158,6 @@ export function step() {
     }
 }
 
-const CARDINALS = [[0, -1], [0, 1], [-1, 0], [1, 0]];
-const ALL8 = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
-
 const inBounds = (x, y) => x >= 0 && x < W && y >= 0 && y < H;
 
 function stepFire(x, y) {
@@ -178,6 +185,15 @@ function stepFire(x, y) {
             moved[i] = moved[j] = 1;
             return;
         }
+
+        if (material[j] === SNOW) {
+            material[j] = Math.random() < 0.25 ? STEAM : WATER;
+            variationMap[j] = Math.floor(Math.random() * 3);
+            material[i] = SMOKE;
+            variationMap[i] = Math.floor(Math.random() * 3);
+            moved[i] = moved[j] = 1;
+            return;
+        }
     }
 
     // Weather affects spread and burn duration.
@@ -195,7 +211,8 @@ function stepFire(x, y) {
         const m = material[j];
         if (m !== WOOD && m !== LEAF) continue;
         const base = m === LEAF ? 0.55 : 0.35;
-        const windBias = Math.max(0, 1 + wind * dx);
+        const wv = wind();
+        const windBias = Math.max(0, 1 + wv * dx);
         const chance = base * vigor * windBias;
 
         if (Math.random() < chance) {
@@ -233,6 +250,23 @@ function stepSmoke(x, y) {
     if (Math.random()<0.02) {
         material[i] = AIR;
         return;
+    }
+
+    const w = wind();
+    if (Math.random() < 0.02) {
+        material[i] = AIR; 
+        return;
+    }
+
+    if (Math.abs(w) > 0.05 && Math.random() < Math.abs(w)) {
+        const nx = x + Math.sign(w);
+        if (nx >= 0 && nx < W) {
+            const j = idx(nx, y);
+            if (material[j] === AIR && !moved[j]) {
+                swap(i, j);
+                return;
+            }
+        }
     }
 
     const dir = Math.random() <0.5 ? -1 : 1;
@@ -282,6 +316,18 @@ function stepSteam(x, y) {
         return;
     }
 
+    const w = wind();
+    if (Math.abs(w) > 0.05 && Math.random() < Math.abs(w)) {
+        const nx = x + Math.sign(w);
+        if (nx >= 0 && nx < W) {
+            const j = idx(nx, y);
+            if ((material[j] === AIR || material[j] === SMOKE) && !moved[j]) {
+                swap(i, j);
+                return;
+            }
+        }
+    }
+
     const dir = Math.random() < 0.5 ? -1 : 1;
     const moves = [[0, -1], [dir, -1], [-dir, -1]];
 
@@ -316,6 +362,18 @@ function stepSnow(x, y) {
     const i = idx(x, y);
     if (moved[i]) return;
 
+    for (const [dx, dy] of ALL8) {
+        const nx = x + dx, ny = y + dy;
+        if (!inBounds(nx, ny)) continue;
+        const j = idx(nx, ny);
+        if (material[j] === FIRE) {
+            const cardinal = (dx === 0 || dy === 0);
+            material[i] = (cardinal || Math.random() < 0.35) ? STEAM : WATER;
+            variationMap[i] = Math.floor(Math.random()*3);
+            return;
+        } 
+    }
+
     if (ui.weather.temperature > 0) {
         if (Math.random() < 0.01) {
             material[i] = WATER;
@@ -326,6 +384,18 @@ function stepSnow(x, y) {
 
     if (y+1 >=H) return;
     if (Math.random() < 0.2) return;
+
+    const w = wind();
+    if (Math.abs(w) > 0.25 && Math.random()  < Math.abs(w) *0.9) {
+        const nx = x + Math.sign(w);
+        if (nx >= 0 && nx < W) {
+            const j = idx(nx, y);
+            if (material[j] === AIR && !moved[j]) {
+                swap(i, j);
+                return;
+            }
+        }
+    }
 
     const below = idx(x, y+1);
 

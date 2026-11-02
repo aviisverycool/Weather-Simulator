@@ -16,6 +16,7 @@ export const ui = {
         humidity: 50,
         pressure: 1010,
         windSpeed: 10,
+        windDirection: 1,
     },
 };
 
@@ -25,6 +26,7 @@ function syncWeatherUI() {
         humid: document.getElementById('wHumid'),
         press: document.getElementById('wPress'),
         wind: document.getElementById('wWindS'),
+        windD: document.getElementById('windD'),
     };
 
     const weatherLabels = {
@@ -32,6 +34,7 @@ function syncWeatherUI() {
         humid: document.getElementById('wHumidVal'),
         press: document.getElementById('wPressVal'),
         wind: document.getElementById('wWindSVal'),
+        windD: document.getElementById('wWindDVal'),
     };
 
     if (weatherInputs.temp) {
@@ -45,6 +48,12 @@ function syncWeatherUI() {
     }
     if (weatherInputs.wind) {
         weatherInputs.wind.value = String(ui.weather.windSpeed);
+    }
+    if (weatherInputs.windD) weatherInputs.windD.value = String(ui.weather.windDirection);
+
+    if (weatherLabels.windD) {
+        const d = ui.weather.windDirection;
+        weatherLabels.windD.textContent = d < 0 ? '<-' : d > 0 ? '->' : '-';
     }
 
     if (weatherLabels.temp) weatherLabels.temp.textContent = `${ui.weather.temperature}°C`;
@@ -141,6 +150,7 @@ export function initUI({onClear, onPauseToggle, onNewMap}) {
         ['wHumid', 'humidity'],
         ['wPress', 'pressure'],
         ['wWindS', 'windSpeed'],
+        ['wWindD', 'windDirection'],
     ];
 
     weatherInputMap.forEach(([id, key]) => {
